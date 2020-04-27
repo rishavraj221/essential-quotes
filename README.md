@@ -63,23 +63,23 @@ Create the config.ini with the following format:
 
 [twitter]
 
-TW_NAME = <your twitter screen name>
+TW_NAME = your twitter screen name
   
-TW_HASH = <your designed hash tag including hash symbol>
+TW_HASH = your designed hash tag including hash symbol
   
-APP_KEY = <your twitter app API Key>
+APP_KEY = your twitter app API Key
   
-APP_SECRET = <your twitter app API Secret> 
+APP_SECRET = your twitter app API Secret
   
-ACCESS_TOKEN = <your twitter app Access Token>
+ACCESS_TOKEN = your twitter app Access Token
   
-ACCESS_SECRET = <your twitter app Access Secret>
+ACCESS_SECRET = your twitter app Access Secret
   
 [sql]
 
-HOST = <your PSQL DB hostname>
+HOST = your PSQL DB hostname
   
-DB = <your PSQL DB name>
+DB = your PSQL DB name
   
 PORT = 5432 <or your custom PSQL DB port>
   
