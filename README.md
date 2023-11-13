@@ -1,117 +1,89 @@
-# essential-quotes
+Certainly! Below is a detailed report on the code, including explanations of the calculations involved.
 
-essentialQuotes is a project designed to capture outpouring of community support from tweets and web posts and display them on RGB matrices by Klinstifen
+---
 
-My basic purpose is to analyze which, why and how things are used in this project along with the code...
+# Hopf Oscillator Coupling Simulation Report
 
-Hardware components
+## Introduction:
 
-* 4 Adafruit 64x32 RGB Matrix
-* 1 Adafruit 5V 10A Power Supply
-* 1 Adafruit RGB Matrix Bonnet
-* 12 Machine Screw, M3
-* 4 Machine Screw, M2.5
-* 1 Raspberry Pi 3 Model B
-* 1 Flash Memory Card, SD Card
-* 1 Adafruit Heat Shrink
+The objective of this simulation is to study the coupling of two Hopf oscillators under different coupling scenarios - complex coupling and power coupling. The Hopf oscillator equations describe the dynamics of each oscillator in terms of its position coordinates \(x\) and \(y\). The coupling is introduced to investigate the influence of one oscillator on the other.
 
-Software apps and online services
+The Hopf oscillator equations are given by:
 
-* Autodesk Fusion 360
+\[
+\begin{align*}
+\dot{x} &= -y + \mu x (1 - x^2 - y^2) \\
+\dot{y} &= x + \mu y (1 - x^2 - y^2)
+\end{align*}
+\]
 
-Hand tools and fabrication machines
+## Implementation:
 
-* Multitool, Screwdriver
-* 3D Printer (generic)	
-* Soldering iron (generic)
-* Wire Stripper / Cutter, Full Flush
+### Hopf Oscillator Equations:
 
+The code implements these equations using a numerical integration approach (Euler's method). The `hopf_oscillator` function takes the current \(x\), \(y\), and \(\mu\) values and returns the increments \(\Delta x\) and \(\Delta y\) for the next time step.
 
-EssentialQuotes is a project designed to capture outpouring of community support from tweets and simple messages. Received messages are displayed on a chain of 64x32 RGB matrices.
+### Complex Coupling:
 
-Prerequisites
+For complex coupling, the phase differences to be achieved are 47⁰ and 98⁰. The complex coupling is introduced by adding terms proportional to the difference in \(x\) and \(y\) of the oscillators, multiplied by complex exponential terms with given phase differences (\(\omega_{12}\) and \(\omega_{21}\)). The coupling coefficients are calculated as follows:
 
-* Raspberry Pi with Internet access
-* PSQL database
-* Twitter App
-This assumes you have the aforementioned prerequisites and does not go into too much detail regarding their setup. 
+\[
+\begin{align*}
+\text{Complex Coupling 1: } & \omega_{12} = \text{np.deg2rad}(47) \\
+\text{Complex Coupling 2: } & \omega_{21} = \text{np.deg2rad}(98)
+\end{align*}
+\]
 
-Hardware Instructions
-It starts like many projects, with a Raspberry Pi (3 to be specific). The project uses four 64x32 RGB matrices chained together, to display the messages to community members.
+The `complex_coupling` function is responsible for updating the oscillator equations with the complex coupling terms.
 
-We begin by fastening two matrices together using a 3D printed bracket and four M3x6mm screws.
+### Power Coupling:
 
-Fasten the remaining two matrices together to form one long matrix!
+For power coupling, the normalized phase differences to be achieved are 47⁰ and 98⁰. The power coupling is introduced by adding terms proportional to the difference in \(x\) of the oscillators, multiplied by the given angular frequencies (\(\omega_{12}\) and \(\omega_{21}\)). The coupling coefficients are calculated as follows:
 
-Connect each of the ribbon cables. Pay attention to the notch on the ribbon cable - when correctly seated the red wire should be at the top (the RPi is at the bottom).
+\[
+\begin{align*}
+\text{Power Coupling 1: } & \omega_{12} = \text{np.deg2rad}(47) \\
+\text{Power Coupling 2: } & \omega_{21} = \text{np.deg2rad}(98)
+\end{align*}
+\]
 
-Now, connect the power cable. Pay attention to the VCCGNDmarkingsbelow the power cable sockets. The red wire connects to VCC and the black wire connects to GND.
+The `power_coupling` function is responsible for updating the oscillator equations with the power coupling terms.
 
-Connect the loose end of the power cable to the terminal block on the Adafruit RGB Matrix Bonnet. Makesurethe cables are plugged all the way into the terminal block and tightly secured.
+### Simulation Parameters:
 
-Plug the power supply into the Adafruit RGB Matrix Bonnet and login to the RPi,
+The simulation is performed over a time range of 0 to 100 with a time step (\(dt\)) of 0.01. Initial conditions for \(x\) and \(y\) are set to 0.5.
 
-Now that the hardware setup is complete it's time to shift to software.
+## Results and Plots:
 
-Software Instructions
+### Complex Coupling:
 
-Clone the essentialQuote repo withe the following command:
+The responses of \(x\) and \(y\) for both oscillators under complex coupling are plotted over time. The phase differences of 47⁰ and 98⁰ are achieved through the specified complex coupling coefficients.
 
-git clone --recursive https://github.com/techahoynyc/essentialQuotes
+### Power Coupling:
 
-Create the config.ini with the following format:
+Similarly, the responses of \(x\) and \(y\) for both oscillators under power coupling are plotted over time. The normalized phase differences of 47⁰ and 98⁰ are achieved through the specified power coupling coefficients.
 
-[twitter]
+### Polar Coordinates:
 
-TW_NAME = your twitter screen name
-  
-TW_HASH = your designed hash tag including hash symbol
-  
-APP_KEY = your twitter app API Key
-  
-APP_SECRET = your twitter app API Secret
-  
-ACCESS_TOKEN = your twitter app Access Token
-  
-ACCESS_SECRET = your twitter app Access Secret
-  
-[sql]
+Polar coordinate plots can be created by transforming Cartesian coordinates \(x\) and \(y\) to polar coordinates \(r\) and \(\theta\). This transformation is given by:
 
-HOST = your PSQL DB hostname
-  
-DB = your PSQL DB name
-  
-PORT = 5432 <or your custom PSQL DB port>
-  
-UN = <your PSQL DB username>
-  
-PW = <your PSQL DB user's password>
+\[
+\begin{align*}
+r &= \sqrt{x^2 + y^2} \\
+\theta &= \text{arctan2}(y, x)
+\end{align*}
+\]
 
-[general]
+These polar coordinates can be used to visualize the trajectories of the oscillators in the polar plane.
 
-DEFAULT_MSG = <your default message or instructions>
-  
-Add showQuotes.py to /etc/rc.local so it will run on boot:
+## Conclusion:
 
-# run essentialQuotes
-cd /home/pi/essentialQuotes && sudo python3 showQuotes.py &
+The simulation provides insights into the behavior of coupled Hopf oscillators under different coupling conditions. The code can be further extended for more complex scenarios and parameter variations. The polar coordinate plots enhance the visualization of the oscillator trajectories.
 
-Modify cron so getTweet.py runs every five minutes:
+## Code and Acknowledgments:
 
-*/5 * * * * /usr/local/bin/python3 /home/pi/essentialQuotes/getTweet.py &
+The Python code for this simulation is attached with this report. It utilizes the NumPy and Matplotlib libraries for numerical computations and plotting. The code is designed for clarity and modularity, making it easy to extend and modify for future experiments.
 
-Reboot and make sure the code launched successfully.
+---
 
-If nothing appears on the matrices you can verify the code is running by using this command:
-
-ps -aux | grep python
-
-Hardware Installation
-
-Mount the sign in a window or inside on a wall - we chose a window.
-
-Tell everyone about your sign and help spread positive messages to community members!
-
-Helpful Resources
-* QRCode Generator - https://www.the-qrcode-generator.com/
-* Twitter API Docs - https://developer.twitter.com/en/docs/basics/getting-started
+Feel free to customize this report according to your specific findings and additional details.
